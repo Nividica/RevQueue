@@ -1,0 +1,32 @@
+{
+  "name": "RevQueue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "build-prod": "webpack --config webpack.prod.js",
+    "watch": "webpack --watch",
+    "lint": "tslint --project .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nividica/RevQueue.git"
+  },
+  "keywords": [],
+  "author": "Chris McGhee",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Nividica/RevQueue/issues"
+  },
+  "homepage": "https://github.com/Nividica/RevQueue#readme",
+  "devDependencies": {
+    "ts-loader": "^6.0.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5",
+    "webpack": "^4.31.0",
+    "webpack-cli": "^3.3.2",
+    "webpack-merge": "^4.2.1"
+  }
+}
