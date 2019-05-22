@@ -23,8 +23,7 @@
     },
     "comment-format": {
       "options": [
-        "check-space",
-        "check-uppercase"
+        "check-space"
       ]
     },
     "completed-docs": false,

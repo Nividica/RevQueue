@@ -49,6 +49,9 @@ class RevQueueTests {
   private fastestMode: ReverseMethod = ReverseMethod.Native;
 
   public RunTests(): void {
+    // SlicedPush is terrible, exclude it
+    this.reverseModes = this.reverseModes.filter((mode) => mode !== ReverseMethod.SlicedPush);
+
     // Test basic functionality
     console.log('Testing basic operations');
     this.reverseModes.forEach((mode) => this.TestBasicIO(mode));
@@ -86,8 +89,8 @@ class RevQueueTests {
     if (queue.length > 0) { throw new Error('Expected size of 0'); }
 
     // Fill and drain test
-    for (let i = 0; i < 100; ++i) { queue.enqueue(i); }
-    for (let i = 0; i < 100; ++i) {
+    for (let i = 0; i < 1000000; ++i) { queue.enqueue(i); }
+    for (let i = 0; i < 1000000; ++i) {
       const v = queue.dequeue();
       if (v !== i) { throw new Error(`Expected dequeue of ${i}, got ${v}`); }
     }
@@ -97,7 +100,8 @@ class RevQueueTests {
 
   private TestReverseModePerformance(): void {
     const metrics: Array<ReverseModeMetric>
-      = this.reverseModes.map((mode) => new ReverseModeMetric(mode));
+      = this.reverseModes
+        .map((mode) => new ReverseModeMetric(mode));
 
     // Run tests
     metrics.forEach((m) => m.time = this.DetermineReversalTime(m.mode).value);
@@ -117,8 +121,8 @@ class RevQueueTests {
     console.groupCollapsed(`Reverse Mode: ${ReverseMethod[mode]}`);
     const prevMode = RevQueue.reverseMethod;
     const queue = new RevQueue<number>();
-    const itemCount = 10000;
-    const reverseCount = 25;
+    const itemCount = 1000000;
+    const reverseCount = 100;
     const perf = new PerfCounter('');
 
     // Start the clock
@@ -133,6 +137,8 @@ class RevQueueTests {
     // Reverse
     for (let i = 0; i < reverseCount; ++i) {
       // Move the head of the queue to the tail of the queue
+      // This will cause one reversal the first time around the loop
+      // and two reversals from that point on.
       queue.enqueue(queue.dequeue());
     }
 
@@ -255,9 +261,14 @@ class RevQueueTests {
 
 class PriorityQueueTests {
   public RunTests(): void {
-    const queue = new PriorityQueue<number>();
+    this.TestSamePriority();
+    this.TestGrowingPriority();
+    this.TestMixedPriority();
+    this.TestComplex();
+  }
 
-    // Same priority
+  private TestSamePriority(): void {
+    const queue = new PriorityQueue<number>();
     queue.enqueue(1, 1)
       .enqueue(2, 1)
       .enqueue(3, 1)
@@ -266,8 +277,10 @@ class PriorityQueueTests {
     if (queue.dequeue() !== 2) { throw new Error('Expected Dequeue of 2'); }
     if (queue.dequeue() !== 3) { throw new Error('Expected Dequeue of 3'); }
     if (queue.dequeue() !== 4) { throw new Error('Expected Dequeue of 4'); }
+  }
 
-    // Growing priority
+  private TestGrowingPriority(): void {
+    const queue = new PriorityQueue<number>();
     queue.enqueue(1, 10)
       .enqueue(2, 20)
       .enqueue(3, 30)
@@ -276,8 +289,10 @@ class PriorityQueueTests {
     if (queue.dequeue() !== 3) { throw new Error('Expected Dequeue of 3'); }
     if (queue.dequeue() !== 2) { throw new Error('Expected Dequeue of 2'); }
     if (queue.dequeue() !== 1) { throw new Error('Expected Dequeue of 1'); }
+  }
 
-    // Mixed priority
+  private TestMixedPriority(): void {
+    const queue = new PriorityQueue<number>();
     queue.enqueue(1, 50)
       .enqueue(2, 100)
       .enqueue(3, 49)
@@ -286,8 +301,10 @@ class PriorityQueueTests {
     if (queue.dequeue() !== 2) { throw new Error('Expected Dequeue of 2'); }
     if (queue.dequeue() !== 1) { throw new Error('Expected Dequeue of 1'); }
     if (queue.dequeue() !== 3) { throw new Error('Expected Dequeue of 3'); }
+  }
 
-    // Mixed priority + ops
+  private TestComplex(): void {
+    const queue = new PriorityQueue<number>();
     queue.enqueue(1, 50)
       .enqueue(2, 100)
       .enqueue(3, 49)
@@ -303,17 +320,13 @@ class PriorityQueueTests {
     if (queue.dequeue() !== 7) { throw new Error('Expected Dequeue of 7'); }
     if (queue.dequeue() !== 5) { throw new Error('Expected Dequeue of 5'); }
 
-    // const items: Array<{ item: number; priority: number }> = [];
-    // for (let i = 0; i < 1000000; i++) {
-    //   items.push({ item: i, priority: Math.floor(Math.random() * 10.0) });
-    // }
-    // items.sort((a, b) => a.priority - b.priority);
-    // console.log(items);
-
   }
+
 }
 
 export function Run() {
-  if (false) { (new RevQueueTests()).RunTests(); }
-  (new PriorityQueueTests()).RunTests();
+  if (Math.random() < 1) {
+    (new RevQueueTests()).RunTests();
+    (new PriorityQueueTests()).RunTests();
+  }
 }

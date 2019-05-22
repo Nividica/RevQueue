@@ -5,7 +5,8 @@ export declare const enum QueueDirection {
 export declare enum ReverseMethod {
     Native = 0,
     SlicedPush = 1,
-    PushPop = 2
+    PushPop = 2,
+    MirrorSwap = 3
 }
 export declare class QueueBase<ItemType> {
     protected items: ReversableArray<ItemType>;

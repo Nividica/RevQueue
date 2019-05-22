@@ -20,7 +20,12 @@ export enum ReverseMethod {
   /**
    * Pop from X, push to Y
    */
-  PushPop
+  PushPop,
+  /**
+   * Swaps each item in the array, starting with swapping the first
+   * with the last, then the second with last -1, etc.
+   */
+  MirrorSwap
 }
 
 export class QueueBase<ItemType>{
@@ -113,6 +118,7 @@ export class ReversableArray<ItemType>{
           // Reverse using the native JS Array method
           this.backingArray.reverse();
           break;
+
         case ReverseMethod.SlicedPush:
           {
             // Start with the next-to-last item (hence -2 instead of -1)
@@ -124,6 +130,7 @@ export class ReversableArray<ItemType>{
             }
           }
           break;
+
         case ReverseMethod.PushPop:
           {
             // Pop from current array, set in new array
@@ -135,6 +142,19 @@ export class ReversableArray<ItemType>{
             this.backingArray = newArray;
           }
           break;
+
+        case ReverseMethod.MirrorSwap:
+          const last = this.backingArray.length - 1;
+          // tslint:disable-next-line:no-magic-numbers
+          const halfLen = last / 2;
+          let tmp: ItemType;
+          for (let idx = 0; idx <= halfLen; idx++) {
+            tmp = this.backingArray[idx];
+            this.backingArray[idx] = this.backingArray[last - idx];
+            this.backingArray[last - idx] = tmp;
+          }
+          break;
+
         default:
           throw new Error('Unsupported Reverse Mode');
       }
