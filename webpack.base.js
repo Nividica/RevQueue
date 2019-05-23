@@ -2,9 +2,6 @@ const webpack = require('webpack');
 const path = require('path');
 
 const config = {
-  entry: {
-    RevQueue: './src/index.ts',
-  },
   module: {
     rules: [
       {
