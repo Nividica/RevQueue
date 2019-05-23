@@ -5,8 +5,11 @@
   </head>
   <script src="../../lib/RevQueueTests.js"></script>
 
-  <body onload="RevQueueTests.Run()">
-
+  <body>
+    <h3>Test results are located in the dev console</h3>
+    <button onclick="RevQueueTests.Run(3)">Test All</button>
+    <button onclick="RevQueueTests.Run(1)">Test RevQueue</button>
+    <button onclick="RevQueueTests.Run(2)">Test PriorityRevQueue</button>
   </body>
 
 </html>

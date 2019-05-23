@@ -11,7 +11,7 @@ interface PriorityNode<ItemType> {
   priority: number;
 }
 
-export class PriorityQueue<ItemType> extends QueueBase<PriorityNode<ItemType>> {
+export class PriorityRevQueue<ItemType> extends QueueBase<PriorityNode<ItemType>> {
 
   /**
    * Compares the priority of two nodes
@@ -37,7 +37,7 @@ export class PriorityQueue<ItemType> extends QueueBase<PriorityNode<ItemType>> {
     if (this.isEmpty()) { throw new Error('Invalid Operation: Can not dequeue from empty queue'); }
     if (!this.isReversed) {
       this.items.setDirection(QueueDirection.Backward);
-      this.items.sort(PriorityQueue.compareNodePriority);
+      this.items.sort(PriorityRevQueue.compareNodePriority);
       this.isReversed = true;
     }
 

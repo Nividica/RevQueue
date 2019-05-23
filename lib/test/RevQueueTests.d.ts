@@ -1,1 +1,1 @@
-export declare function Run(): void;
+export declare function Run(testFlag: number): void;
