@@ -88,9 +88,7 @@ const EnumToArray = <TEnum>(enumeration: any): Array<TEnum> => {
 };
 
 class RevQueueTests {
-  private readonly reverseMethods: Array<ReverseMethod>
-    = EnumToArray<ReverseMethod>(ReverseMethod)
-      .filter((mode) => mode !== ReverseMethod.SlicedPush);
+  private readonly reverseMethods: Array<ReverseMethod> = EnumToArray<ReverseMethod>(ReverseMethod);
 
   private results = new TestingResults();
 

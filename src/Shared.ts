@@ -10,20 +10,18 @@ export const enum QueueDirection {
 
 export enum ReverseMethod {
   /**
-   * Array.reverse()
+   * `Array.reverse()`
    */
   Native,
   /**
-   * Slice and push each item, back to front
-   */
-  SlicedPush,
-  /**
-   * Pop from X, push to Y
+   * Copy items from a source array to a new array via
+   * `new.push(source.pop())` then set `source = new`
    */
   PushPop,
   /**
    * Swaps each item in the array, starting with swapping the first
-   * with the last, then the second with last -1, etc.
+   * with the last, then the second with last -1, etc, until the middle
+   * elements are swapped.
    */
   MirrorSwap
 }
@@ -114,26 +112,14 @@ export class ReversableArray<ItemType>{
     if (reversed !== this.isReversed) {
       this.isReversed = reversed;
       switch (mode) {
+        // Reverse using the native JS Array method
         case ReverseMethod.Native:
-          // Reverse using the native JS Array method
           this.backingArray.reverse();
           break;
 
-        case ReverseMethod.SlicedPush:
-          {
-            // Start with the next-to-last item (hence -2 instead of -1)
-            // tslint:disable-next-line:no-magic-numbers
-            let idx = this.backingArray.length - 2;
-            while (idx > -1) {
-              this.backingArray.push(this.backingArray[idx]);
-              this.backingArray.splice(idx--, 1);
-            }
-          }
-          break;
-
+        // Pop from current array, set in new array
         case ReverseMethod.PushPop:
           {
-            // Pop from current array, set in new array
             let len = this.backingArray.length;
             // Pre allocate new array
             const newArray = new Array<ItemType>(len);
@@ -143,15 +129,22 @@ export class ReversableArray<ItemType>{
           }
           break;
 
+        // Swap first <-> last inward to the middle element(s)
         case ReverseMethod.MirrorSwap:
-          const last = this.backingArray.length - 1;
-          // tslint:disable-next-line:no-magic-numbers
-          const halfLen = last / 2;
+          // Index of the element on the right to swap
+          let right = this.backingArray.length - 1;
+          // Index of the element on the left to swap
+          let left = 0;
           let tmp: ItemType;
-          for (let idx = 0; idx <= halfLen; idx++) {
-            tmp = this.backingArray[idx];
-            this.backingArray[idx] = this.backingArray[last - idx];
-            this.backingArray[last - idx] = tmp;
+          while (left < right) {
+            // Store left
+            tmp = this.backingArray[left];
+            // Swap right into left
+            this.backingArray[left] = this.backingArray[right];
+            // Swap left into right
+            this.backingArray[right] = tmp;
+            // Move inward
+            ++left; --right;
           }
           break;
 
