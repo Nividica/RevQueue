@@ -3,9 +3,16 @@
  * Email: Nividica@gmail.com
  */
 
+/**
+ * Is the queue forwards or backwards
+ *
+ * This is relative to a `.push()` operation, the queue is
+ * forward if no reversal is needed to push, the queue is
+ * backwards if a reversal is needed before a push.
+ */
 export const enum QueueDirection {
-  Backward,
-  Forward
+  Forward = 0,
+  Backward = 1
 }
 
 export enum ReverseMethod {
@@ -52,6 +59,14 @@ export class QueueBase<ItemType>{
   public isEmpty(): boolean {
     return this.items.length() === 0;
   }
+
+  /**
+   * Returns the next item that will be dequeued, or `undefined`
+   * if the queue is empty.
+   */
+  public peek(): ItemType | undefined {
+    return this.items.peek();
+  }
 }
 
 /**
@@ -94,6 +109,15 @@ export class ReversableArray<ItemType>{
    */
   public push(item: ItemType): void {
     this.backingArray.push(item);
+  }
+
+  /**
+   * Returns the oldest(first added) item in the array.
+   */
+  public peek(): ItemType | undefined {
+    return (this.backingArray.length === 0)
+      ? undefined
+      : this.backingArray[(this.isReversed === QueueDirection.Forward ? 0 : this.backingArray.length - 1)];
   }
 
   /**

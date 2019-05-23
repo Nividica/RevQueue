@@ -162,14 +162,14 @@ class RevQueueTests {
     const queue = new RevQueue<number>();
     const perf = new PerfCounter();
 
-    // Start the clock
-    perf.start();
-
     // Set the mode
     RevQueue.reverseMethod = mode;
 
     // Fill
     for (let i = 0; i < ReverseMethodPerformanceItemCount; ++i) { queue.enqueue(i); }
+
+    // Start the clock
+    perf.start();
 
     // Reverse
     for (let i = 0; i < ReverseMethodPerformanceReversalCount; ++i) {
@@ -339,3 +339,7 @@ export function Run(testFlag: number) {
     console.groupEnd();
   }
 }
+
+// Expose the queues so that we can play with them in the console
+console.info(RevQueue);
+console.info(PriorityRevQueue);
