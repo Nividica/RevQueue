@@ -113,6 +113,7 @@ class RevQueueTests {
           fastestAlgo.perf = methodPerf;
         }
       } catch (ex) {
+        passed = false;
         console.exception(ex);
       }
       this.results.reversalTests.push(new ReversalTestResult(rMethod, passed, methodPerf));
