@@ -2,7 +2,7 @@
   "name": "RevQueue",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/RevQueue.js",
   "scripts": {
     "build": "webpack",
     "build-prod": "webpack --config webpack.prod.js",
